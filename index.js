@@ -1,4 +1,7 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const HOST = process.env.HOST || '127.0.0.1';

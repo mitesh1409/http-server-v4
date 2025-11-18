@@ -135,6 +135,31 @@ app.put('/api/users/:id', (req, res) => {
         });
 });
 
+// CSR route to delete a user by ID.
+// DELETE /api/users/:id
+app.delete('/api/users/:id', (req, res) => {
+    const userId = Number(req.params.id);
+    const userIndex = users.findIndex(u => u.id === userId);
+
+    if (userIndex === -1) {
+        return res
+            .status(404)
+            .json({
+                status: 'Not Found',
+                message: 'User not found',
+            });
+    }
+
+    users.splice(userIndex, 1);
+
+    return res
+        .status(200)
+        .json({
+            status: 'OK',
+            message: 'User deleted successfully',
+        });
+});
+
 app.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
 });

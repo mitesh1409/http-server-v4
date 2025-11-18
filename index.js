@@ -92,6 +92,49 @@ app.post('/api/users', (req, res) => {
         });
 });
 
+// CSR route to update an existing user by ID.
+// PUT /api/users/:id
+app.put('/api/users/:id', (req, res) => {
+    const userId = Number(req.params.id);
+    const userIndex = users.findIndex(u => u.id === userId);
+
+    if (userIndex === -1) {
+        return res
+            .status(404)
+            .json({
+                status: 'Not Found',
+                message: 'User not found',
+            });
+    }
+
+    const { first_name, last_name, email, gender, job_title } = req.body;
+
+    if (!first_name || !last_name || !email || !gender || !job_title) {
+        return res
+            .status(400)
+            .json({
+                status: 'Bad Request',
+                message: 'Missing required fields',
+            });
+    }
+
+    users[userIndex] = {
+        id: userId,
+        first_name,
+        last_name,
+        email,
+        gender,
+        job_title
+    };
+
+    return res
+        .status(200)
+        .json({
+            status: 'OK',
+            data: users[userIndex],
+        });
+});
+
 app.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
 });

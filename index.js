@@ -36,6 +36,29 @@ app.get('/api/users', (req, res) => {
     });
 });
 
+// CSR route to get a single user by ID as JSON.
+// GET /api/users/:id
+app.get('/api/users/:id', (req, res) => {
+    const userId = Number(req.params.id);
+    const user = users.find(u => u.id === userId);
+
+    if (!user) {
+        return res
+            .status(404)
+            .json({
+                status: 'Not Found',
+                message: 'User not found',
+            });
+    }
+
+    return res
+        .status(200)
+        .json({
+            status: 'OK',
+            data: user,
+        });
+});
+
 // CSR route to save a new user.
 // POST /api/users
 app.post('/api/users', (req, res) => {

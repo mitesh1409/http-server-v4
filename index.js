@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 8000;
 // App directory.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+app.use(express.json()); // To parse JSON bodies.
+app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies.
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -31,6 +34,39 @@ app.get('/api/users', (req, res) => {
         status: 'OK',
         data: users,
     });
+});
+
+// CSR route to save a new user.
+// POST /api/users
+app.post('/api/users', (req, res) => {
+    const { first_name, last_name, email, gender, job_title } = req.body;
+
+    if (!first_name || !last_name || !email || !gender || !job_title) {
+        return res
+            .status(400)
+            .json({
+                status: 'Bad Request',
+                message: 'Missing required fields',
+            });
+    }
+
+    const newUser = {
+        id: users.length + 1,
+        first_name,
+        last_name,
+        email,
+        gender,
+        job_title
+    };
+
+    users.push(newUser);
+
+    return res
+        .status(201)
+        .json({
+            status: 'Created',
+            id: newUser.id,
+        });
 });
 
 app.listen(PORT, HOST, () => {
